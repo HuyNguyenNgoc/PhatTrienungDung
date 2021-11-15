@@ -18,26 +18,24 @@ Route::get('/',[
     'uses'=>'App\Http\Controllers\PageController@getIndex'
 ]);
 Auth::routes();
+    Route::get('/home', 'App\Http\Controllers\HomeController@index')->name('home');
 
-Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index'])->name('admin.dashboard');
-
-//Route::prefix('admin')->group(function(){
+Route::prefix('admin')->group(function(){
     
-    Route::get('/admin', 'App\Http\Controllers\AdminController@index')->name('admin.dashboard');
-    //Route::get('/dashboard', 'AdminController@index')->name('admin.dashboard');
-
+    Route::get('/', 'App\Http\Controllers\AdminController@index')->name('admin.dashboard');
+    Route::get('/chart', 'App\Http\Controllers\AdminController@chart')->name('chart');
     //tài khoản-------------
     route::get('/register','App\Http\Controllers\AdminController@getDangKy')->name('admin.register');
     route::post('/register','App\Http\Controllers\AdminController@postDangKy')->name('admin.register.submit');
-    Route::get('/login', 'App\Http\Controllers\Auth\AdminLoginController@showLoginForm')->name('admin.login');
+   //Route::get('/login', 'App\Http\Controllers\Auth\AdminLoginController@showLoginForm')->name('admin.login');
     Route::post('/login', 'App\Http\Controllers\Auth\AdminLoginController@login')->name('admin.login.submit');
     Route::get('/logout', 'App\Http\Controllers\Auth\AdminLoginController@logout')->name('admin.logout');
 
     //loại sản phẩm-------------
     Route::match(['get','post'],'/loaisp/themloaisp', 'App\Http\Controllers\AdminController@themLoaiSP')->name('admin.themloaisp');
     Route::get('/loaisp/xemloaisp', 'App\Http\Controllers\AdminController@xemLoaiSP')->name('admin.xemloaisp');
-    Route::match(['get','post'],'/sualoaisp/{id}', 'App\Http\Controllers\AdminController@suaLoaiSP')->name('admin.sualoaisp');
-    Route::match(['get','post'],'/xoaloaisp/{id}', 'App\Http\Controllers\AdminController@xoaLoaiSP')->name('admin.xoaloaisp');
+    Route::match(['get','post'],'/loaisp/sualoaisp/{id}', 'App\Http\Controllers\AdminController@suaLoaiSP')->name('admin.sualoaisp');
+    Route::match(['get','post'],'/loaisp/xoaloaisp/{id}', 'App\Http\Controllers\AdminController@xoaLoaiSP')->name('admin.xoaloaisp');
 
     //sản phẩm-------------
     Route::match(['get','post'],'/sanpham/themsanpham', 'App\Http\Controllers\AdminController@themSanPham')->name('admin.themsanpham');
@@ -46,17 +44,14 @@ Route::get('/admin', [App\Http\Controllers\AdminController::class, 'index'])->na
     Route::match(['get','post'],'/sanpham/xoasanpham/{id}', 'App\Http\Controllers\AdminController@xoaSanPham')->name('admin.xoasanpham');
     Route::get('/xoa-img-sanpham/{id}', 'App\Http\Controllers\AdminController@xoaImgSanPham')->name('admin.xoaimgsanpham');
 
-    //quản lý tài khoản nhân viên
-    Route::get('/users/xemtaikhoan', 'App\Http\Controllers\AdminController@xemTaiKhoan')->name('admin.xemtaikhoan');
-
     //xử lý đơn hàng
-    Route::get('/donhang/xu-ly-don-hang', 'App\Http\Controllers\AdminController@xuLyDonHang')->name('admin.xulidonhang');
+    Route::get('/donhang/xulydonhang', 'App\Http\Controllers\AdminController@xuLyDonHang')->name('admin.xulidonhang');
     Route::get('/donhang/load-don-hang', 'App\Http\Controllers\AdminController@loadDonHang')->name('admin.loaddonhang');
-    Route::match(['get','post'],'/donhang/xac-nhan-don-hang/{id}', 'App\Http\Controllers\AdminController@xacNhanDonHang')->name('admin.xacnhandonhang');
+    Route::match(['get','post'],'/donhang/xacnhandonhang/{id}', 'App\Http\Controllers\AdminController@xacNhanDonHang')->name('admin.xacnhandonhang');
     Route::match(['get','post'],'/xoadonhang/{id}', 'App\Http\Controllers\AdminController@xoaDonHang')->name('xoadonhang');
-    Route::get('/donhang/xem-don-hang-da-duyet', 'App\Http\Controllers\AdminController@xemTinhTrangDonHangDaDuyet')->name('xemdonhangdaduyet');
-    Route::match(['get','post'],'/donhang/xac-nhan-don-hang-2/{id}', 'App\Http\Controllers\AdminController@xacNhanDonhang2')->name('admin.xacnhandonhang2');
-//});
+    Route::get('/donhang/xemdonhangdaduyet', 'App\Http\Controllers\AdminController@xemTinhTrangDonHangDaDuyet')->name('xemdonhangdaduyet');
+    Route::match(['get','post'],'/donhang/xacnhandonhang2/{id}', 'App\Http\Controllers\AdminController@xacNhanDonhang2')->name('admin.xacnhandonhang2');
+});
 
 Route::get('index',[
     'as'=>'trang-chu',
@@ -136,7 +131,6 @@ Route::get('about',[
     'as'=>'about',
     'uses'=>'App\Http\Controllers\PageController@getAbout'
 ]);
-Route::get('/tim-kiem', 'App\Http\Controllers\PageController@search')->name('search');
 
-
+Route::get('/timkiem', 'App\Http\Controllers\PageController@search')->name('search');
 

@@ -27,7 +27,7 @@
                 <div class="product_details_text">
                     <h4>{{$sanpham->TenSP}}</h4>
                     {!!$sanpham->MoTa!!}
-                    <h5>Giá :<span>{{number_format($sanpham->DonGia)}}đ</span></h5>
+                    <h5>Giá :<span>{{number_format($sanpham->DonGia) }}VNĐ</span></h5>
                     <div class="quantity_box">
                         <label for="quantity">Số lượng :</label>
                         <form>
@@ -72,63 +72,39 @@
 <!--================End Product Details Area =================-->
 
 <!--================Similar Product Area =================-->
-<section class="similar_product_area p_100">
-    <div class="container">
-        <div class="main_title">
-            <h2>Similar Products</h2>
-        </div>
-        <div class="row similar_product_inner">
-            <div class="col-lg-3 col-md-4 col-6">
-                <div class="cake_feature_item">
-                    <div class="cake_img">
-                        <img src="source/img/cake-feature/c-feature-1.jpg" alt="">
-                    </div>
-                    <div class="cake_text">
-                        <h4>$29</h4>
-                        <h3>Strawberry Cupcakes</h3>
-                        <a class="pest_btn" href="#">Add to cart</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-6">
-                <div class="cake_feature_item">
-                    <div class="cake_img">
-                        <img src="source/img/cake-feature/c-feature-2.jpg" alt="">
-                    </div>
-                    <div class="cake_text">
-                        <h4>$29</h4>
-                        <h3>Strawberry Cupcakes</h3>
-                        <a class="pest_btn" href="#">Add to cart</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-6">
-                <div class="cake_feature_item">
-                    <div class="cake_img">
-                        <img src="source/img/cake-feature/c-feature-3.jpg" alt="">
-                    </div>
-                    <div class="cake_text">
-                        <h4>$29</h4>
-                        <h3>Strawberry Cupcakes</h3>
-                        <a class="pest_btn" href="#">Add to cart</a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-4 col-6">
-                <div class="cake_feature_item">
-                    <div class="cake_img">
-                        <img src="source/img/cake-feature/c-feature-4.jpg" alt="">
-                    </div>
-                    <div class="cake_text">
-                        <h4>$29</h4>
-                        <h3>Strawberry Cupcakes</h3>
-                        <a class="pest_btn" href="#">Add to cart</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+<section class="welcome_bakery_area pink_cake_feature" >
+        	<div class="container">
+        		<div class="cake_feature_inner">
+      				<div class="title_view_all">
+						<div class="float-left">
+							<div class="main_w_title">
+								<h2>Sản phẩm cùng loại</h2>
+							</div>
+						</div>
+					</div>
+       				<div class="cake_feature_slider owl-carousel">
+						@foreach ($sp_cungloai as $spcl)
+						<div class="item">
+							<a href="{{route('chitiet-sanpham',$spcl->MaSP)}}">
+							<div class="cake_feature_item">
+								<div class="cake_img">
+									<img src="images/img-SanPham/small/{{$spcl->Image}}" alt="">
+								</div>
+								<div class="cake_text">
+									<h4>{{number_format($spcl->DonGia)}}VND</h4>
+									<h3>{{$spcl->TenSP}}</h3>
+									<a class="pest_btn" href="{{route('themgiohang',$spcl->MaSP)}}"><i class="lnr lnr-cart"></i> Thêm</a>
+								</div>
+							</div>
+							</a>
+						</div>
+						@endforeach
+       				</div>
+
+        		</div>
+
+        	</div>
+    </section>
 <!--================End Similar Product Area =================-->
 
 <!--================Newsletter Area =================-->

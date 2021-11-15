@@ -34,14 +34,15 @@ class PageController extends Controller
         return Auth::guard('khachhang');
     }
 
-    public function getIndex(){
+    public function getIndex(Request $req){
         $slide = Slide::all();
-        $sp_moi = SanPham::where('sp_moi','1')->get();
-        return view('page/trangchu',compact('slide','sp_moi'));
+        $spmoi = SanPham::where('sp_moi','1')->get();
+     
+        return view('page.trangchu',compact('slide', 'spmoi'));
     }
 
     public function getLoaiSanPham($type){
-        $sp_load = SanPham::where('MaLoaiSP',$type)->paginate(8);
+        $sp_load = SanPham::where('MaLoaiSP',$type)->paginate(9);
         $sanpham = SanPham::all();
         $loaisp = LoaiSP::all();
         $title = LoaiSP::where('MaLoaiSP',$type)->value('TenLoaiSP');
@@ -50,9 +51,12 @@ class PageController extends Controller
 
     public function getChiTietSanPham($req){
         $sanpham = SanPham::where('MaSP',$req)->first();
-        return view('page.chitiet_sanpham',compact('sanpham'));
+        $sp_cungloai = SanPham::where('MaLoaiSP', $sanpham->MaLoaiSP)->paginate(4);
+
+        return view('page.chitiet_sanpham',compact('sanpham','sp_cungloai'));
     } 
 
+  
     
     public function getAddCart(Request $req, $MaSP){
         $sanpham = SanPham::where('MaSP',$MaSP)->first();

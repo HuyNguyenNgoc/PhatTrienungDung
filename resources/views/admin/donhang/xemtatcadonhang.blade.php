@@ -40,8 +40,8 @@
                     <input type="hidden" id="maddh" name="hoten" value="{{$dh->MaDDH}}">
                     <td>{!! $stt; !!}</td>
                     <td>{{$dh->TenKH}}</td>
-                    <td>{{$dh->NVbanHang}}</td>
-                    <td>{{$dh->NVgiaoHang}}</td>
+                    <td>{{$dh->MaNV}}</td>
+                    <td>{{$dh->MaNV}}</td>
                     <td>{{$dh->created_at}}</td>
                     <td>{{$dh->ThoiGianGiaoHang}}</td>
                     <td>{{$dh->DiaChiGiaoHang}}</td>
@@ -66,7 +66,7 @@
                     @if($dh->TinhTrangHD=="3")
                         <a style="color: #fff" id="xuly_dh" class="btn btn-success btn-sm">Xem</a>
                     @else
-                        <a href="donhang/xac-nhan-don-hang-2/{{$dh->MaDDH}}" id="xuly_dh" class="btn btn-info btn-sm">Sửa</a>
+                        <a href="admin/donhang/xacnhandonhang2/{{$dh->MaDDH}}" id="xuly_dh" class="btn btn-info btn-sm">Sửa</a>
                     @endif
                     </td>
                 </tr>

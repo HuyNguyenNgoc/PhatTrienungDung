@@ -18,7 +18,7 @@
       <div class="alert alert-success">{{Session::get('thanhcong')}}</div>
     @endif
 
-    <form enctype="multipart/form-data" action="{{ url('/admin/donhang/xac-nhan-don-hang/'.$donhang->MaDDH) }}" method="POST">
+    <form enctype="multipart/form-data" action="{{ url('/admin/donhang/xacnhandonhang/'.$donhang->MaDDH) }}" method="POST">
         @csrf
         <div class="form-group row">
             <label class="col-sm-2 col-form-label">Mã đơn đặt hàng</label>

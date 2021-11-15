@@ -49,7 +49,7 @@
                     @endif
                       <span class="badge badge-warning">Chưa xử lý</span> 
                     </td>
-                    <td><a href="{{URL::to('donhang/xac-nhan-don-hang/'.$dh->MaDDH)}}" id="xuly_dh" class="btn btn-success btn-sm">Xem</a></td>
+                    <td><a href="{{URL::to('admin/donhang/xacnhandonhang/'.$dh->MaDDH)}}" id="xuly_dh" class="btn btn-success btn-sm">Xem</a></td>
                 </tr>
                 <?php $stt++; ?>
                 @endforeach
@@ -82,7 +82,7 @@
         // });  
         // $("#xuly_dh").click(function () {
         //   var number=document.getElementById("maddh").value; 
-        //   window.location.href = "<?php echo URL::to('admin/donhang/xac-nhan-don-hang/"+number"/'); ?>";
+          // window.location.href = "<?php //echo URL::to('admin/donhang/xacnhandonhang/"+number"/'); ?>";
         // });
         // function getcube(){  
         //   var number=document.getElementById("maddh").value; 

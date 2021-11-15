@@ -89,12 +89,7 @@
             </div>
         </div>
 
-        <div class="form-group row">
-            <label class="col-sm-2 col-form-label">Nhân viên bán hàng</label>
-            <div class="col-sm-4">
-                <input type="text" class="form-control" name="tongtien" value="{{$nv_banhang}}" placeholder="" readonly>
-            </div>
-        </div>
+        
 
         <div class="form-group row">
             <label class="col-sm-2 col-form-label">Nhân viên giao hàng</label>

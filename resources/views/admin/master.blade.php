@@ -19,13 +19,20 @@
   <!-- Custom styles for this template-->
   <link href="admin-source/css/sb-admin-2.min.css" rel="stylesheet">
 
+
   <!-- Custom styles for this page -->
   <link href="admin-source/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+
+  <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+
+  <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+
 
 </head>
 
 <body id="page-top">
-
   <!-- Page Wrapper -->
   <div id="wrapper">
 
@@ -42,9 +49,10 @@
         <!-- Topbar -->
         @include('admin.topmenu')
         <!-- End of Topbar -->
-  
+
         <!-- Begin Page Content -->
         @yield('content')
+        
         <!-- /.container-fluid -->
 
       </div>
@@ -84,6 +92,7 @@
     </div>
   </div>
 
+
   <!-- Bootstrap core JavaScript-->
   <script src="admin-source/vendor/jquery/jquery.min.js"></script>
   <script src="admin-source/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -110,16 +119,15 @@
   {{-- Ckeditor --}}
   <script src="vendor/unisharp/laravel-ckeditor/ckeditor.js"></script>
 
-  <script>
-   
-    
-   $("#xuly_dh").click(function () {
-    window.location.href = $(this).data('href');
-  });
 
+
+  <script>
+    $("#xuly_dh").click(function() {
+      window.location.href = $(this).data('href');
+    });
   </script>
 
-@yield('script')
+  @yield('script')
 </body>
 
 </html>

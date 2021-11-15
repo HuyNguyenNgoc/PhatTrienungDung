@@ -46,7 +46,111 @@ class AdminController extends Controller
      */
     //index---------------------------------
     public function index(){
-        return view('admin.dashboard');
+        //Khách hàng
+        $users = KhachHang::select(DB::raw("COUNT(*) as kh"))
+                ->whereYear('created_at', date('Y'))
+                ->groupBy(DB::raw("Month(created_at)"))
+                ->pluck('kh');
+
+        $monthsKH = KhachHang::select(DB::raw("Month(created_at) as monthKH"))
+                ->whereYear('created_at', date('Y'))
+                ->groupBy(DB::raw("Month(created_at)"))
+                ->pluck('monthKH');
+        //End KhachHang
+        //Đơn đặt hàng
+        $orders = DonDatHang::select(DB::raw("COUNT(*) as ddh"))
+                ->whereYear('created_at', date('Y'))
+                ->groupBy(DB::raw("Month(created_at)"))
+                ->pluck('ddh');
+
+        $monthsDDH = DonDatHang::select(DB::raw("Month(created_at) as monthDDH"))
+                ->whereYear('created_at', date('Y'))
+                ->groupBy(DB::raw("Month(created_at)"))
+                ->pluck('monthDDH');
+        //End DonDatHang
+        
+        //Sản phẩm bán chạy
+        $spbanchay = SanPham::select(DB::raw("SUM(SoLuongBan) as spbc"))
+                ->whereYear('created_at', date('Y'))
+                ->groupBy(DB::raw("Month(created_at)"))
+                ->pluck('spbc');
+        //dd($spbanchay);
+        $monthsspbc = SanPham::select(DB::raw("Month(created_at) as monthspbc"))
+                ->whereYear('created_at', date('Y'))
+                ->groupBy(DB::raw("Month(created_at)"))
+                ->pluck('monthspbc');
+        //End SP bán chạy
+        //Doanh thu 
+        $doanhthu = SanPham::select(DB::raw("SUM((SoLuongBan)*(DonGia)) as doanhthu"))
+                ->whereYear('created_at', date('Y'))
+                ->groupBy(DB::raw("Month(created_at)"))
+                ->pluck('doanhthu');
+        //dd($doanhthu);
+        $monthsdoanhthu = SanPham::select(DB::raw("Month(created_at) as monthsdoanhthu"))
+                ->whereYear('created_at', date('Y'))
+                ->groupBy(DB::raw("Month(created_at)"))
+                ->pluck('monthsdoanhthu');
+        //End Doanh thu theo tháng
+
+        //Sản phẩm
+        $products = SanPham::select(DB::raw("COUNT(*) as sp"))
+                ->pluck('sp');
+        //End SanPham
+
+        //Loại sản phẩm
+        $loaisp = LoaiSP::select(DB::raw("COUNT(*) as lsp"))
+                ->pluck('lsp');
+        //End loaiSanPham
+
+        //khách hàng
+        $khdk = KhachHang::select(DB::raw("COUNT(*) as kh"))
+                ->pluck('kh');
+        //End khách hàng 
+
+        $total = SanPham::select(DB::raw("SUM((SoLuongBan)*(DonGia)) as total"))
+                ->pluck('total');
+        //dd($total);
+
+        $data = [ ['name' => 'users'],
+                ['name' => 'orders'],
+                ['name' => 'products'], 
+                ['name' => 'total'], 
+                ['name' => 'loaisp'], 
+                ['name' => 'spbc'], 
+                ['name' => 'doanhthu'],
+                ['name' => 'khdk']
+            ];
+                
+        $data['users'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        $data['orders'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        $data['products'] = $products;
+        $data['loaisp'] = $loaisp;
+        $data['total'] = $total;
+        $data['khdk'] = $khdk;
+        $data['spbc'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        $data['doanhthu'] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+        
+
+        foreach ($monthsKH as $index => $monthsKH){
+            --$monthsKH;
+            $data['users'][$monthsKH] = $users[$index];
+        }
+
+        foreach ($monthsDDH as $index => $monthsDDH){
+            --$monthsDDH;
+            $data['orders'][$monthsDDH] = $orders[$index];
+        }
+
+        foreach ($monthsspbc as $index => $monthsspbc){
+            --$monthsspbc;
+            $data['spbc'][$monthsspbc] = $spbanchay[$index];
+        }
+
+        foreach ($monthsdoanhthu as $index => $monthsdoanhthu){
+            --$monthsdoanhthu;
+            $data['doanhthu'][$monthsdoanhthu] = $doanhthu[$index];
+        }
+        return view('admin.dashboard', ['data' => $data]);
     }
 
     //get đăng ký tài khoản---------------------------------
@@ -119,7 +223,7 @@ class AdminController extends Controller
             $loaisp->TenLoaiSP=$req->tenloaisp;
             $loaisp->MoTa=$req->mota;
             $loaisp->save();
-            return redirect('admin/loaisp/xemloaisp')->with('thanhcong','Thêm loại sản phẩm thành công');
+            return redirect('admin.loaisp.xemloaisp')->with('thanhcong','Thêm loại sản phẩm thành công');
         }
         return view('admin.loaisp.themloaisp');
     }
@@ -258,7 +362,7 @@ class AdminController extends Controller
             }
             SanPham::where(['MaSP'=>$id])->update(['MaLoaiSP'=>$data['loaisp'],'TenSP'=>$data['tensanpham'],
             'DonViTinh'=>$data['dvt'],'DonGia'=>$data['dongia'],'SoLuong'=>$data['soluong'],'MoTa'=>$data['mota'],'nguyen_lieu'=>$data['nguyen_lieu'],'MaSP'=>$data['masanpham'],'Image'=>$filename]);
-            return redirect('sanpham/xemsanpham')->with('thanhcong','Cập nhật sản phẩm thành công');
+            return redirect('admin.sanpham.xemsanpham')->with('thanhcong','Cập nhật sản phẩm thành công');
         }
         $sanpham = SanPham::where(['MaSP'=>$id])->first();
         $malsp = $sanpham->MaLoaiSP;
@@ -293,14 +397,16 @@ class AdminController extends Controller
     public function xuLyDonHang(){
         $donhang = DB::table('DonDatHang')->select('*')->where('TtrangDH', '1')->orderBy('MaDDH', 'desc')->get();
         $tt = 0;
-        foreach($donhang as $key =>$val){
-            $khachhang = KhachHang::where(['id'=>$val->MaKH])->first();
+        foreach($donhang as $key => $val){
+            $khachhang = KhachHang::where(['MaKH' => $val->MaKH])->first();
+            //dd($khachhang);
             $donhang[$key]->TenKH = $khachhang->TenKH;
+            
         }
-
+        
         foreach($donhang as $key =>$val){
-            //$ct_ddh = ChiTietDDH::where(['MaDDH'=>$val->MaDDH])->get();
-            $ct_ddh = DB::table('ChiTietDDH')->select('*')->where('MaDDH',$val->MaDDH)->get();
+            $ct_ddh = ChiTietDDH::where(['MaDDH'=>$val->MaDDH])->get();
+            //$ct_ddh = DB::table('ChiTietDDH')->select('*')->where('MaDDH',$val->MaDDH)->get();
             
             foreach($ct_ddh as $item)
             {
@@ -309,8 +415,10 @@ class AdminController extends Controller
                 //$sp = SanPham::where(['MaSP'=>$item->MaSP])->get();
                 $sl = $item->SoLuong;
                 $sp = DB::table('SanPham')->select('DonGia')->where('MaSP',$item->MaSP)->get();
+                //dd($sp);
                 foreach($sp as $sp_item)
                 {
+                    $tt = 0;
                     $tt += $sp_item->DonGia*$sl;
                 }
                 
@@ -331,7 +439,7 @@ class AdminController extends Controller
         $tt = 0;
 
         foreach($donhangs as $key =>$val){
-            $khachhang = KhachHang::where(['id'=>$val->MaKH])->first();
+            $khachhang = KhachHang::where(['MaKH'=>$val->MaKH])->first();
             $donhangs[$key]->TenKH = $khachhang->TenKH;
         }
 
@@ -393,7 +501,7 @@ class AdminController extends Controller
                     <?php    
                     }
                     ?></td>
-                    <td><button type="submit" data-href="<?php URL::to('donhang/xac-nhan-don-hang.'.$dh->MaDDH) ?>" id="xuly_dh"  class="btn btn-success btn-sm">Xử lý</button></td>
+                    <td><button type="submit" data-href="<?php URL::to('admin/donhang/xacnhandonhang.'.$dh->MaDDH) ?>" id="xuly_dh"  class="btn btn-success btn-sm">Xử lý</button></td>
                 </tr>
                 <?php $stt++; 
             } 
@@ -433,20 +541,13 @@ class AdminController extends Controller
         }
 
         if($req->isMethod('POST')){
-            $this->validate($req,
-            [
-                'nv_giaohang'=>'required',
-            ],
-            [
-                'nv_giaohang.required'=>'Vui lòng chọn nhân viên giao hàng',
-            ]
-            );
+           
             
             $hoadon = new HoaDon();
             $hoadon->MaDDH=$donhang->MaDDH;
-            $hoadon->MaNV=Auth::guard()->id();
+            
             $hoadon->MaKH=$donhang->MaKH;
-            $hoadon->nv_giaohang=$req->nv_giaohang;
+            
             $hoadon->save();
 
             $ma_hd = DB::getPdo()->lastInsertId();
@@ -460,16 +561,17 @@ class AdminController extends Controller
             }
             DonDatHang::where('MaDDH',$donhang->MaDDH)->update(['TtrangDH' => '2']);
         
-            return redirect()->action('AdminController@xuLyDonHang')->with('thanhcong','Duyệt đơn hàng thành công');
+            return redirect()->action('App\Http\Controllers\AdminController@xuLyDonHang')->with('thanhcong','Duyệt đơn hàng thành công');
         }
         
             //echo "<pre>"; print_r($sp_dh);die();
-            $kh = KhachHang::where(['id'=>$donhang->MaKH])->first();
+            $kh = KhachHang::where(['MaKH'=>$donhang->MaKH])->first();
             $donhang->MaKH = $kh->id." - ".$kh->TenKH." - ".$kh->email;
-            $nhanvien = NhanVien::where(['Quyen'=>'4'])->get();
+            $nhanvien = NhanVien::all();
             //echo "<pre>"; print_r($nhanvien);die();
+            //dd($nhanvien);
 
-        return view('admin.donhang.xulydonhang')->with(compact('donhang','tongtien','sp_dh','nhanvien'));
+        return view('admin.donhang.xulydonhang')->with(compact('donhang','tongtien','sp_dh', 'nhanvien'));
     }
 
     public function xoaDonHang($id = null){
@@ -484,7 +586,7 @@ class AdminController extends Controller
         $donhang = DB::table('DonDatHang')->select('*')->where('TtrangDH', '2')->orderBy('MaDDH', 'desc')->get();
         $tt = 0;
         foreach($donhang as $key =>$val){
-            $khachhang = KhachHang::where(['id'=>$val->MaKH])->first();
+            $khachhang = KhachHang::where(['MaKH'=>$val->MaKH])->first();
             $donhang[$key]->TenKH = $khachhang->TenKH;
         }
 
@@ -501,18 +603,20 @@ class AdminController extends Controller
                 $sp = DB::table('SanPham')->select('DonGia')->where('MaSP',$item->MaSP)->get();
                 foreach($sp as $sp_item)
                 {
+                    $tt = 0;
                     $tt += $sp_item->DonGia*$sl;
                 }                
             }
             $donhang[$key]->TongTien = $tt;
         }
         foreach($donhang as $key =>$val){
-            $hoadon = HoaDon::where(['MaDDH'=>$val->MaDDH])->first();
-            $nv_bh = NhanVien::where('id',$hoadon->MaNV)->first();
-            $nv_gh = NhanVien::where('id',$hoadon->nv_giaohang)->first();
-
-            $donhang[$key]->NVbanHang = $nv_bh->TenNV;
-            $donhang[$key]->NVgiaoHang = $nv_gh->TenNV;
+            $hoadon = HoaDon::where(['MaDDH' => $val->MaDDH])->first();
+            //dd($hoadon);
+           // $nv_bh = NhanVien::where('MaNV',$hoadon->MaNV)->first();
+            $nv_gh = NhanVien::where('MaNV', $hoadon->MaNV)->first();
+            
+            //$donhang[$key]->nv_giaohang = $nv_bh->TenNV;
+            $donhang[$key]->MaNV = $nv_gh->TenNV;
             $donhang[$key]->TinhTrangHD = $hoadon->TtThanhToan;
         }
 
@@ -543,10 +647,10 @@ class AdminController extends Controller
         }
 
         $hoadon = HoaDon::where(['MaDDH'=>$donhang->MaDDH])->first();
-        $nv_bh = NhanVien::where('id',$hoadon->MaNV)->first();
-        $nv_gh = NhanVien::where('id',$hoadon->nv_giaohang)->first();
+        // $nv_bh = NhanVien::where('MaNV',$hoadon->MaNV)->first();
+        $nv_gh = NhanVien::where('MaNV',$hoadon->MaNV)->first();
 
-        $nv_banhang = $nv_bh->TenNV ." - ". $nv_bh->id;
+        // $nv_banhang = $nv_bh->TenNV ." - ". $nv_bh->id;
         $nv_giaohang = $nv_gh->TenNV ." - ". $nv_gh->id;
         $tt_hoadon = $hoadon->TtThanhToan;
 
@@ -573,7 +677,7 @@ class AdminController extends Controller
         }
         
             //echo "<pre>"; print_r($sp_dh);die();
-            $kh = KhachHang::where(['id'=>$donhang->MaKH])->first();
+            $kh = KhachHang::where(['MaKH'=>$donhang->MaKH])->first();
             $donhang->MaKH = $kh->id." - ".$kh->TenKH." - ".$kh->email;
             $nhanvien = NhanVien::where(['Quyen'=>'4'])->get();
             //echo "<pre>"; print_r($nhanvien);die();
@@ -581,8 +685,8 @@ class AdminController extends Controller
             // echo "<pre>"; print_r($donhang->MaDDH);
             // die();
             
-                
-
-        return view('admin.donhang.xacnhandonhang')->with(compact('donhang','tongtien','sp_dh','nhanvien','nv_banhang','nv_giaohang','tt_hoadon'));
+        return view('admin.donhang.xacnhandonhang')->with(compact('donhang','tongtien','sp_dh','nhanvien','nv_giaohang','tt_hoadon'));
     }
+
+       
 }

@@ -162,7 +162,8 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
-        
+        ConsoleTVs\Charts\ChartsServiceProvider::class,
+       
 
        
 
@@ -232,7 +233,7 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'Image' => Intervention\Image\Facades\Image::class,
-        
+        'Charts' => ConsoleTVs\Charts\ChartsServiceProvider::class,
 
     ],
 
